@@ -69,8 +69,33 @@ public class InteractionResponse {
         this.updated = updated;
     }
 
+    /**
+     * Returns the model's generated text. The Gemini API does not actually return an
+     * "output_text" field on the raw REST response (that's a convenience property computed
+     * client-side by the official SDKs) - so when it's absent, this derives the same value by
+     * concatenating the text content of "model_output" steps.
+     */
     public String getOutputText() {
-        return outputText;
+        if (outputText != null) {
+            return outputText;
+        }
+        if (steps == null) {
+            return null;
+        }
+
+        StringBuilder text = new StringBuilder();
+        for (Step step : steps) {
+            if (!"model_output".equals(step.getType()) || step.getContent() == null) {
+                continue;
+            }
+            for (ContentPart part : step.getContent()) {
+                if ("text".equals(part.getType()) && part.getText() != null) {
+                    text.append(part.getText());
+                }
+            }
+        }
+
+        return text.isEmpty() ? null : text.toString();
     }
 
     public void setOutputText(String outputText) {

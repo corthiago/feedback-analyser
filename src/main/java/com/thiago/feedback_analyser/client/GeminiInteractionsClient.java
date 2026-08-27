@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 )
 public interface GeminiInteractionsClient {
 
-    @PostMapping("/interactions")
+    @PostMapping(value = "/interactions", consumes = "application/json", produces = "application/json")
     InteractionResponse createInteraction(@RequestBody InteractionRequest request);
 
     @GetMapping("/interactions/{id}")

@@ -8,7 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,6 +41,37 @@ public class FeedbackController {
             model.addAttribute("error", "Error loading feedback data: " + e.getMessage());
             return "error";
         }
+    }
+
+    /**
+     * Displays the form for creating a new feedback entry.
+     *
+     * @return The name of the view to render
+     */
+    @GetMapping("/feedback/new")
+    public String newFeedbackForm() {
+        return "create-feedback";
+    }
+
+    /**
+     * Creates a new feedback entry and redirects back to the dashboard.
+     *
+     * @return Redirect to the dashboard
+     */
+    @PostMapping("/feedback")
+    public String createFeedback(@RequestParam String customer,
+                                  @RequestParam String department,
+                                  @RequestParam String date,
+                                  @RequestParam String comment,
+                                  @RequestParam(required = false) String sentiment,
+                                  RedirectAttributes redirectAttributes) {
+        try {
+            feedbackService.createFeedback(customer, department, date, comment, sentiment);
+            redirectAttributes.addFlashAttribute("success", "Feedback submitted successfully.");
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("error", "Error creating feedback: " + e.getMessage());
+        }
+        return "redirect:/";
     }
 
     /**

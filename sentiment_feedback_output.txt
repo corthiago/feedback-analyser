@@ -417,4 +417,10 @@ Department: Clothing
 Date: 2025-04-22
 Comment: Store layout is functional. Parking was difficult to find.
 Sentiment: Neutral
+Feedback #51
+Customer: Thiago
+Department: Sales
+Date: 2026-08-27
+Comment: Product I wanted was out of stock. I had to travel across the store multiple times to find everything.
+Sentiment: Negative
 

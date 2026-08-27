@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -223,6 +225,71 @@ public class FeedbackService {
         }
 
         return enhancedEntry;
+    }
+
+    /**
+     * Creates a new feedback entry, persists it to the sentiment file, enhances it
+     * with AI-generated category/insight, and appends it to the in-memory cache.
+     * If sentiment is null or blank, it is auto-detected from the comment via Gemini.
+     *
+     * @return The newly created, enhanced feedback entry
+     * @throws IOException If an I/O error occurs
+     */
+    public synchronized EnhancedFeedback createFeedback(String customer, String department,
+                                                         String date, String comment, String sentiment) throws IOException {
+        List<FeedbackEntry> entries = readFeedbackData();
+        int nextId = entries.stream().mapToInt(FeedbackEntry::getId).max().orElse(0) + 1;
+
+        String resolvedSentiment = (sentiment == null || sentiment.isBlank())
+                ? analyzeSentiment(comment)
+                : sentiment;
+
+        FeedbackEntry entry = new FeedbackEntry(nextId, customer, department, date, comment, resolvedSentiment);
+        appendFeedbackEntry(entry);
+
+        EnhancedFeedback enhanced = enhanceFeedback(entry);
+        if (enhancedFeedbackCache != null) {
+            enhancedFeedbackCache.add(enhanced);
+        }
+
+        return enhanced;
+    }
+
+    /**
+     * Uses Gemini to classify a comment's sentiment as Positive, Neutral, or Negative.
+     */
+    private String analyzeSentiment(String comment) {
+        String prompt = String.format("""
+            Classify the sentiment of the following customer feedback comment.
+            Respond with exactly one word: Positive, Neutral, or Negative. No punctuation or explanation.
+
+            Comment: %s
+            """, comment);
+
+        String response = geminiService.generateContent(prompt).trim().toLowerCase();
+
+        if (response.contains("positive")) {
+            return "Positive";
+        }
+        if (response.contains("negative")) {
+            return "Negative";
+        }
+        return "Neutral";
+    }
+
+    /**
+     * Appends a feedback entry to the sentiment file in the same format readFeedbackData parses.
+     */
+    private void appendFeedbackEntry(FeedbackEntry entry) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(SENTIMENT_FILE_PATH, true))) {
+            writer.write("Feedback #" + entry.getId() + "\n");
+            writer.write("Customer: " + entry.getCustomer() + "\n");
+            writer.write("Department: " + entry.getDepartment() + "\n");
+            writer.write("Date: " + entry.getDate() + "\n");
+            writer.write("Comment: " + entry.getComment() + "\n");
+            writer.write("Sentiment: " + entry.getSentiment() + "\n");
+            writer.write("\n");
+        }
     }
 
     /**
