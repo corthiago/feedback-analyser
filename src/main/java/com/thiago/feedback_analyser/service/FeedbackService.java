@@ -11,6 +11,9 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -121,7 +124,7 @@ public class FeedbackService {
         // Extract date
         Matcher dateMatcher = DATE_PATTERN.matcher(text);
         if (dateMatcher.find()) {
-            entry.setDate(dateMatcher.group(1));
+            entry.setDate(parseDate(dateMatcher.group(1)));
         }
 
         // Extract comment
@@ -137,6 +140,19 @@ public class FeedbackService {
         }
 
         return entry;
+    }
+
+    /**
+     * Parses a date string into a LocalDateTime. Handles both full timestamps (written by
+     * createFeedback going forward) and legacy date-only strings (from the original sample
+     * data), which are interpreted as start-of-day.
+     */
+    private LocalDateTime parseDate(String raw) {
+        try {
+            return LocalDateTime.parse(raw);
+        } catch (DateTimeParseException e) {
+            return LocalDate.parse(raw).atStartOfDay();
+        }
     }
 
     /**
@@ -236,7 +252,7 @@ public class FeedbackService {
      * @throws IOException If an I/O error occurs
      */
     public synchronized EnhancedFeedback createFeedback(String customer, String department,
-                                                         String date, String comment, String sentiment) throws IOException {
+                                                         String comment, String sentiment) throws IOException {
         List<FeedbackEntry> entries = readFeedbackData();
         int nextId = entries.stream().mapToInt(FeedbackEntry::getId).max().orElse(0) + 1;
 
@@ -244,6 +260,7 @@ public class FeedbackService {
                 ? analyzeSentiment(comment)
                 : sentiment;
 
+        var date = LocalDateTime.now();
         FeedbackEntry entry = new FeedbackEntry(nextId, customer, department, date, comment, resolvedSentiment);
         appendFeedbackEntry(entry);
 

@@ -427,3 +427,10 @@ Date: 2026-08-27
 Comment: Product I wanted was out of stock. I might reconsider shopping here in the future.
 Sentiment: Negative
 
+Feedback #52
+Customer: Thiago
+Department: Sales
+Date: 2026-08-27T19:32:11.477331
+Comment: Great selection of products available. I appreciated the seasonal decorations.
+Sentiment: Positive
+

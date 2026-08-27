@@ -1,5 +1,7 @@
 package com.thiago.feedback_analyser.model;
 
+import java.time.LocalDateTime;
+
 /**
  * Represents a feedback entry with sentiment analysis.
  */
@@ -7,7 +9,7 @@ public class FeedbackEntry {
     private int id;
     private String customer;
     private String department;
-    private String date;
+    private LocalDateTime date;
     private String comment;
     private String sentiment;
 
@@ -15,7 +17,7 @@ public class FeedbackEntry {
     }
 
     public FeedbackEntry(int id, String customer, String department,
-                         String date, String comment, String sentiment) {
+                         LocalDateTime date, String comment, String sentiment) {
         this.id = id;
         this.customer = customer;
         this.department = department;
@@ -48,11 +50,11 @@ public class FeedbackEntry {
         this.department = department;
     }
 
-    public String getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

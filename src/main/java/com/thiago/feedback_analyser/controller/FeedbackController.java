@@ -61,12 +61,11 @@ public class FeedbackController {
     @PostMapping("/feedback")
     public String createFeedback(@RequestParam String customer,
                                   @RequestParam String department,
-                                  @RequestParam String date,
                                   @RequestParam String comment,
                                   @RequestParam(required = false) String sentiment,
                                   RedirectAttributes redirectAttributes) {
         try {
-            feedbackService.createFeedback(customer, department, date, comment, sentiment);
+            feedbackService.createFeedback(customer, department, comment, sentiment);
             redirectAttributes.addFlashAttribute("success", "Feedback submitted successfully.");
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("error", "Error creating feedback: " + e.getMessage());
