@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Feedback Dashboard</title>
+    <title>All Feedback</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         body { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif; }
     </style>
@@ -21,9 +20,9 @@
             <span class="text-lg font-semibold tracking-tight text-white">Retail Store Customer Feedback Dashboard</span>
         </div>
         <div class="flex items-center gap-3">
-            <a href="/feedback/all"
+            <a href="/"
                class="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium text-slate-300 transition-colors hover:border-indigo-500 hover:text-white">
-                All Feedback
+                Back to Dashboard
             </a>
             <a href="/feedback/new"
                class="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500">
@@ -33,41 +32,14 @@
     </div>
 </nav>
 
-<main class="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-    <div th:if="${success}" class="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300" th:text="${success}"></div>
-    <div th:if="${error}" class="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300" th:text="${error}"></div>
+<main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div th:if="${error}" class="mb-6 rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300" th:text="${error}"></div>
 
-    <!-- Summary Section -->
-    <section class="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-lg shadow-black/20">
-            <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Feedback Summary</h2>
-            <p class="mt-2 text-3xl font-bold text-white" th:text="${summary.totalFeedback}">0</p>
-            <p class="text-sm text-slate-500">Total feedback entries</p>
-            <div class="mt-5">
-                <h3 class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">Sentiment Distribution</h3>
-                <div class="relative h-56">
-                    <canvas id="sentimentChart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-lg shadow-black/20">
-            <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">Category Distribution</h2>
-            <div class="relative h-64">
-                <canvas id="categoryChart"></canvas>
-            </div>
-        </div>
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-lg shadow-black/20">
-            <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">Department Distribution</h2>
-            <div class="relative h-64">
-                <canvas id="departmentChart"></canvas>
-            </div>
-        </div>
-    </section>
-
-    <!-- Recent Feedback Section -->
     <section class="rounded-xl border border-slate-800 bg-slate-900 shadow-lg shadow-black/20">
         <div class="border-b border-slate-800 px-6 py-4">
-            <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Recent Feedback</h2>
+            <h1 class="text-sm font-semibold uppercase tracking-wide text-slate-400">
+                All Feedback <span class="text-slate-600">(<span th:text="${feedbackList.size()}">0</span>)</span>
+            </h1>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
@@ -96,7 +68,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="feedback : ${summary.recentFeedback}"
+                <tr th:each="feedback : ${feedbackList}"
                     th:with="sentimentClass=${feedback.sentiment == 'Positive' or feedback.sentiment == 'VERY_POSITIVE' ? 'bg-emerald-500/15 text-emerald-400 ring-emerald-500/30' : (feedback.sentiment == 'Negative' or feedback.sentiment == 'VERY_NEGATIVE' ? 'bg-rose-500/15 text-rose-400 ring-rose-500/30' : 'bg-slate-500/15 text-slate-300 ring-slate-500/30')}"
                     class="border-b border-slate-800/60 transition-colors last:border-0 hover:bg-slate-800/40">
                     <td class="px-6 py-3 text-slate-400" th:text="${feedback.id}">1</td>
@@ -121,104 +93,5 @@
         </div>
     </section>
 </main>
-
-<script th:inline="javascript">
-    // Get summary data from Thymeleaf
-    const summaryData = /*[[${summary}]]*/ {};
-
-    Chart.defaults.color = '#94a3b8';
-    Chart.defaults.borderColor = 'rgba(148, 163, 184, 0.1)';
-    Chart.defaults.font.family = "'Inter', ui-sans-serif, system-ui, sans-serif";
-
-    const palette = ['#6366f1', '#10b981', '#f43f5e', '#f59e0b', '#38bdf8', '#a78bfa', '#f472b6', '#2dd4bf'];
-
-    // Prepare chart data
-    const prepareChartData = (dataObject) => {
-        const labels = Object.keys(dataObject);
-        const values = Object.values(dataObject);
-        const backgroundColors = labels.map((_, i) => palette[i % palette.length]);
-
-        return {
-            labels,
-            datasets: [{
-                data: values,
-                backgroundColor: backgroundColors,
-                borderColor: '#0f172a',
-                borderWidth: 2
-            }]
-        };
-    };
-
-    // Create sentiment chart
-    const createSentimentChart = () => {
-        const ctx = document.getElementById('sentimentChart').getContext('2d');
-        const data = prepareChartData(summaryData.sentimentCounts);
-
-        new Chart(ctx, {
-            type: 'pie',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { boxWidth: 10, padding: 12 }
-                    }
-                }
-            }
-        });
-    };
-
-    // Create category chart
-    const createCategoryChart = () => {
-        const ctx = document.getElementById('categoryChart').getContext('2d');
-        const data = prepareChartData(summaryData.categoryCounts);
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(148, 163, 184, 0.08)' } },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-    };
-
-    // Create department chart
-    const createDepartmentChart = () => {
-        const ctx = document.getElementById('departmentChart').getContext('2d');
-        const data = prepareChartData(summaryData.departmentCounts);
-
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { boxWidth: 10, padding: 12 }
-                    }
-                }
-            }
-        });
-    };
-
-    // Initialize charts when the page loads
-    document.addEventListener('DOMContentLoaded', () => {
-        createSentimentChart();
-        createCategoryChart();
-        createDepartmentChart();
-    });
-</script>
 </body>
 </html>

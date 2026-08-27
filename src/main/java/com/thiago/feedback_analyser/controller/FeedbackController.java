@@ -44,6 +44,23 @@ public class FeedbackController {
     }
 
     /**
+     * Displays the full feedback list.
+     *
+     * @param model Model to add attributes to
+     * @return The name of the view to render
+     */
+    @GetMapping("/feedback/all")
+    public String allFeedback(Model model) {
+        try {
+            model.addAttribute("feedbackList", feedbackService.getEnhancedFeedback());
+            return "all-feedback";
+        } catch (IOException e) {
+            model.addAttribute("error", "Error loading feedback data: " + e.getMessage());
+            return "error";
+        }
+    }
+
+    /**
      * Displays the form for creating a new feedback entry.
      *
      * @return The name of the view to render
