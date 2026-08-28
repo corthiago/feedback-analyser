@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -74,5 +75,29 @@ class GeminiServiceTest {
         String result = geminiService.generateContent("Say hello");
 
         assertThat(result).startsWith("Error: ");
+    }
+
+    @Test
+    void generateJsonSetsResponseFormatWithGivenSchema() {
+        InteractionResponse response = new InteractionResponse();
+        response.setOutputText("{\"sentiment\":\"Positive\"}");
+        when(geminiClient.createInteraction(any())).thenReturn(response);
+
+        Map<String, Object> schema = Map.of(
+                "type", "object",
+                "properties", Map.of("sentiment", Map.of("type", "string"))
+        );
+
+        String result = geminiService.generateJson("Analyze this", schema);
+
+        assertThat(result).isEqualTo("{\"sentiment\":\"Positive\"}");
+
+        ArgumentCaptor<InteractionRequest> captor = ArgumentCaptor.forClass(InteractionRequest.class);
+        Mockito.verify(geminiClient).createInteraction(captor.capture());
+        InteractionRequest sentRequest = captor.getValue();
+        assertThat(sentRequest.getResponseFormat()).isNotNull();
+        assertThat(sentRequest.getResponseFormat().getType()).isEqualTo("text");
+        assertThat(sentRequest.getResponseFormat().getMimeType()).isEqualTo("application/json");
+        assertThat(sentRequest.getResponseFormat().getSchema()).isEqualTo(schema);
     }
 }

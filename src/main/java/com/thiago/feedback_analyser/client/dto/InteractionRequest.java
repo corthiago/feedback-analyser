@@ -15,6 +15,7 @@ public class InteractionRequest {
     private Boolean store;
     private String previousInteractionId;
     private GenerationConfig generationConfig;
+    private ResponseFormat responseFormat;
 
     public String getModel() {
         return model;
@@ -70,5 +71,13 @@ public class InteractionRequest {
 
     public void setGenerationConfig(GenerationConfig generationConfig) {
         this.generationConfig = generationConfig;
+    }
+
+    public ResponseFormat getResponseFormat() {
+        return responseFormat;
+    }
+
+    public void setResponseFormat(ResponseFormat responseFormat) {
+        this.responseFormat = responseFormat;
     }
 }

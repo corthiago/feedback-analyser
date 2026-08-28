@@ -330,3 +330,9 @@ Department: Sales
 Date: 2026-08-27T23:04:32.174162
 Comment: Prices are comparable to other stores. The store was very crowded during my visit.
 
+Feedback #56
+Customer: Rupert
+Department: IT
+Date: 2026-08-28T13:11:53.391567
+Comment: I liked the app
+

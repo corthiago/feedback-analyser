@@ -1,5 +1,6 @@
 package com.thiago.feedback_analyser.service;
 
+import tools.jackson.databind.ObjectMapper;
 import com.thiago.feedback_analyser.model.EnhancedFeedback;
 import com.thiago.feedback_analyser.model.FeedbackEntry;
 import com.thiago.feedback_analyser.model.FeedbackSummary;
@@ -7,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -17,15 +16,33 @@ import java.util.stream.Collectors;
 @Service
 public class FeedbackService {
 
+    // Constrains Gemini's structured output for enhanceFeedback to exactly these fields
+    private static final Map<String, Object> ANALYSIS_SCHEMA = Map.of(
+            "type", "object",
+            "properties", Map.of(
+                    "sentiment", Map.of("type", "string", "enum", List.of("Positive", "Neutral", "Negative")),
+                    "category", Map.of("type", "string", "enum", List.of(
+                            "Product Quality", "Customer Service", "Store Experience", "Website/App",
+                            "Delivery", "Price/Value", "Inventory/Stock", "Other")),
+                    "actionableInsight", Map.of("type", "string")
+            ),
+            "required", List.of("sentiment", "category", "actionableInsight")
+    );
+
+    private record FeedbackAnalysis(String sentiment, String category, String actionableInsight) {
+    }
+
     private final GeminiService geminiService;
     private final FileService fileService;
+    private final ObjectMapper objectMapper;
 
     // Cache for feedback data
     private List<EnhancedFeedback> enhancedFeedbackCache = null;
 
-    public FeedbackService(GeminiService geminiService, FileService fileService) {
+    public FeedbackService(GeminiService geminiService, FileService fileService, ObjectMapper objectMapper) {
         this.geminiService = geminiService;
         this.fileService = fileService;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -39,7 +56,6 @@ public class FeedbackService {
 
         List<FeedbackEntry> entries = fileService.readFeedbackData();
         List<EnhancedFeedback> enhancedEntries = new ArrayList<>();
-
         for (FeedbackEntry entry : entries) {
             EnhancedFeedback enhancedEntry = enhanceFeedback(entry);
             enhancedEntries.add(enhancedEntry);
@@ -60,61 +76,29 @@ public class FeedbackService {
     private EnhancedFeedback enhanceFeedback(FeedbackEntry entry) {
         EnhancedFeedback enhancedEntry = new EnhancedFeedback(entry);
 
-        // Create a prompt for Gemini
+        // Create a prompt for Gemini - the response shape is enforced by ANALYSIS_SCHEMA,
+        // not by prompt instructions
         String prompt = String.format("""
             You are an AI assistant specialized in customer feedback analysis.
             Analyze the following customer feedback and:
-            1. Classify the sentiment of the following customer feedback comment. Respond with exactly one word: Positive, Neutral, or Negative. No punctuation or explanation.
-            2. Categorize the feedback into one of these categories: Product Quality, Customer Service, Store Experience, Website/App, Delivery, Price/Value, Inventory/Stock, or Other.
-            3. Provide a specific actionable insight or recommendation based on the feedback.
-            
-            Format your response as JSON with three fields: "sentiment", "category" and "actionableInsight".
-            Keep your response concise but insightful.
-            
+            1. Classify its sentiment.
+            2. Categorize it into the most appropriate category.
+            3. Provide a specific, actionable insight or recommendation based on the feedback.
+
             Customer Feedback:
             Comment: %s
             Department: %s
-            
-            Provide the category and actionable insight as JSON:
             """, entry.getComment(), entry.getDepartment());
 
         try {
-            // Call Gemini API and parse the response
-            String response = geminiService.generateContent(prompt);
-
-            // Parse JSON response
-            // This is a simple parsing approach - for production, use a proper JSON parser
-            String jsonResponse = response.trim();
-
-            // Extract sentiment
-            Pattern sentimentPattern = Pattern.compile("\"sentiment\"\\s*:\\s*\"([^\"]+)\"");
-            Matcher sentimentMatcher = sentimentPattern.matcher(jsonResponse);
-            if (sentimentMatcher.find()) {
-                enhancedEntry.setSentiment(sentimentMatcher.group(1));
-            } else {
-                enhancedEntry.setSentiment("Uncategorized");
-            }
-
-            // Extract category
-            Pattern categoryPattern = Pattern.compile("\"category\"\\s*:\\s*\"([^\"]+)\"");
-            Matcher categoryMatcher = categoryPattern.matcher(jsonResponse);
-            if (categoryMatcher.find()) {
-                enhancedEntry.setCategory(categoryMatcher.group(1));
-            } else {
-                enhancedEntry.setCategory("Uncategorized");
-            }
-
-            // Extract actionable insight
-            Pattern insightPattern = Pattern.compile("\"actionableInsight\"\\s*:\\s*\"([^\"]+)\"");
-            Matcher insightMatcher = insightPattern.matcher(jsonResponse);
-            if (insightMatcher.find()) {
-                enhancedEntry.setActionableInsight(insightMatcher.group(1));
-            } else {
-                enhancedEntry.setActionableInsight("No specific action recommended.");
-            }
-
+            String json = geminiService.generateJson(prompt, ANALYSIS_SCHEMA);
+            FeedbackAnalysis analysis = objectMapper.readValue(json, FeedbackAnalysis.class);
+            enhancedEntry.setSentiment(analysis.sentiment());
+            enhancedEntry.setCategory(analysis.category());
+            enhancedEntry.setActionableInsight(analysis.actionableInsight());
         } catch (Exception e) {
-            // Handle API errors gracefully
+            // Handle API errors or malformed responses gracefully
+            enhancedEntry.setSentiment("Uncategorized");
             enhancedEntry.setCategory("Error in processing");
             enhancedEntry.setActionableInsight("Could not generate insight due to API error: " + e.getMessage());
         }

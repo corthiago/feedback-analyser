@@ -4,12 +4,14 @@ import com.thiago.feedback_analyser.client.GeminiInteractionsClient;
 import com.thiago.feedback_analyser.client.dto.GenerationConfig;
 import com.thiago.feedback_analyser.client.dto.InteractionRequest;
 import com.thiago.feedback_analyser.client.dto.InteractionResponse;
+import com.thiago.feedback_analyser.client.dto.ResponseFormat;
 import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,12 +38,33 @@ public class GeminiService {
     }
 
     /**
-     * Sends a prompt to Gemini and returns the response
+     * Sends a prompt to Gemini and returns the freeform text response
      *
      * @param prompt The prompt to send to Gemini
      * @return The response from Gemini
      */
     public String generateContent(String prompt) {
+        return generate(prompt, null);
+    }
+
+    /**
+     * Sends a prompt to Gemini constrained to return JSON matching the given schema, and
+     * returns the raw JSON response text (ready to be deserialized by the caller).
+     *
+     * @param prompt     The prompt to send to Gemini
+     * @param jsonSchema A JSON Schema (as a Map, per org.json-schema conventions: "type",
+     *                   "properties", "required", etc.) the response must conform to
+     * @return The JSON response from Gemini
+     */
+    public String generateJson(String prompt, Map<String, Object> jsonSchema) {
+        ResponseFormat responseFormat = new ResponseFormat();
+        responseFormat.setType("text");
+        responseFormat.setMimeType("application/json");
+        responseFormat.setSchema(jsonSchema);
+        return generate(prompt, responseFormat);
+    }
+
+    private String generate(String prompt, ResponseFormat responseFormat) {
         try {
             GenerationConfig generationConfig = new GenerationConfig();
             generationConfig.setTemperature(temperature);
@@ -51,6 +74,7 @@ public class GeminiService {
             request.setModel(model);
             request.setInput(prompt);
             request.setGenerationConfig(generationConfig);
+            request.setResponseFormat(responseFormat);
 
             InteractionResponse response = geminiClient.createInteraction(request);
 
