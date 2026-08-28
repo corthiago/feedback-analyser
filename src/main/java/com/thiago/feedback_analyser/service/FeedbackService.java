@@ -1,7 +1,7 @@
 package com.thiago.feedback_analyser.service;
 
-import tools.jackson.databind.ObjectMapper;
 import com.thiago.feedback_analyser.model.EnhancedFeedback;
+import com.thiago.feedback_analyser.model.FeedbackAnalysis;
 import com.thiago.feedback_analyser.model.FeedbackEntry;
 import com.thiago.feedback_analyser.model.FeedbackSummary;
 import org.springframework.stereotype.Service;
@@ -16,33 +16,13 @@ import java.util.stream.Collectors;
 @Service
 public class FeedbackService {
 
-    // Constrains Gemini's structured output for enhanceFeedback to exactly these fields
-    private static final Map<String, Object> ANALYSIS_SCHEMA = Map.of(
-            "type", "object",
-            "properties", Map.of(
-                    "sentiment", Map.of("type", "string", "enum", List.of("Positive", "Neutral", "Negative")),
-                    "category", Map.of("type", "string", "enum", List.of(
-                            "Product Quality", "Customer Service", "Store Experience", "Website/App",
-                            "Delivery", "Price/Value", "Inventory/Stock", "Other")),
-                    "actionableInsight", Map.of("type", "string")
-            ),
-            "required", List.of("sentiment", "category", "actionableInsight")
-    );
-
-    private record FeedbackAnalysis(String sentiment, String category, String actionableInsight) {
-    }
-
-    private final GeminiService geminiService;
+    private final FeedbackAnalysisService feedbackAnalysisService;
     private final FileService fileService;
-    private final ObjectMapper objectMapper;
-
-    // Cache for feedback data
     private List<EnhancedFeedback> enhancedFeedbackCache = null;
 
-    public FeedbackService(GeminiService geminiService, FileService fileService, ObjectMapper objectMapper) {
-        this.geminiService = geminiService;
+    public FeedbackService(FeedbackAnalysisService feedbackAnalysisService, FileService fileService) {
+        this.feedbackAnalysisService = feedbackAnalysisService;
         this.fileService = fileService;
-        this.objectMapper = objectMapper;
     }
 
     /**
@@ -69,39 +49,14 @@ public class FeedbackService {
 
     /**
      * Enhances a single feedback entry with AI-generated category and actionable insight.
-     *
-     * @param entry FeedbackEntry to enhance
-     * @return EnhancedFeedback with AI-generated category and actionable insight
      */
     private EnhancedFeedback enhanceFeedback(FeedbackEntry entry) {
         EnhancedFeedback enhancedEntry = new EnhancedFeedback(entry);
 
-        // Create a prompt for Gemini - the response shape is enforced by ANALYSIS_SCHEMA,
-        // not by prompt instructions
-        String prompt = String.format("""
-            You are an AI assistant specialized in customer feedback analysis.
-            Analyze the following customer feedback and:
-            1. Classify its sentiment.
-            2. Categorize it into the most appropriate category.
-            3. Provide a specific, actionable insight or recommendation based on the feedback.
-
-            Customer Feedback:
-            Comment: %s
-            Department: %s
-            """, entry.getComment(), entry.getDepartment());
-
-        try {
-            String json = geminiService.generateJson(prompt, ANALYSIS_SCHEMA);
-            FeedbackAnalysis analysis = objectMapper.readValue(json, FeedbackAnalysis.class);
-            enhancedEntry.setSentiment(analysis.sentiment());
-            enhancedEntry.setCategory(analysis.category());
-            enhancedEntry.setActionableInsight(analysis.actionableInsight());
-        } catch (Exception e) {
-            // Handle API errors or malformed responses gracefully
-            enhancedEntry.setSentiment("Uncategorized");
-            enhancedEntry.setCategory("Error in processing");
-            enhancedEntry.setActionableInsight("Could not generate insight due to API error: " + e.getMessage());
-        }
+        FeedbackAnalysis analysis = feedbackAnalysisService.analyze(entry);
+        enhancedEntry.setSentiment(analysis.sentiment());
+        enhancedEntry.setCategory(analysis.category());
+        enhancedEntry.setActionableInsight(analysis.actionableInsight());
 
         return enhancedEntry;
     }
@@ -109,10 +64,6 @@ public class FeedbackService {
     /**
      * Creates a new feedback entry, persists it to the sentiment file, enhances it
      * with AI-generated category/insight, and appends it to the in-memory cache.
-     * If sentiment is null or blank, it is auto-detected from the comment via Gemini.
-     *
-     * @return The newly created, enhanced feedback entry
-     * @throws IOException If an I/O error occurs
      */
     public synchronized EnhancedFeedback createFeedback(String customer, String department, String comment) throws IOException {
         List<FeedbackEntry> entries = fileService.readFeedbackData();
@@ -134,9 +85,6 @@ public class FeedbackService {
 
     /**
      * Generates a summary of the feedback data for the dashboard.
-     *
-     * @return FeedbackSummary object
-     * @throws IOException If an I/O error occurs
      */
     public FeedbackSummary generateFeedbackSummary() throws IOException {
         List<EnhancedFeedback> allFeedback = getEnhancedFeedback();

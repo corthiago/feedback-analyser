@@ -14,15 +14,7 @@ import org.springframework.web.bind.annotation.*;
 )
 public interface GeminiInteractionsClient {
 
-    @PostMapping(value = "/interactions", consumes = "application/json", produces = "application/json")
+    @PostMapping("/interactions")
     InteractionResponse createInteraction(@RequestBody InteractionRequest request);
 
-    @GetMapping("/interactions/{id}")
-    InteractionResponse getInteraction(@PathVariable("id") String id);
-
-    @DeleteMapping("/interactions/{id}")
-    void deleteInteraction(@PathVariable("id") String id);
-
-    @PostMapping("/interactions/{id}/cancel")
-    InteractionResponse cancelInteraction(@PathVariable("id") String id);
 }

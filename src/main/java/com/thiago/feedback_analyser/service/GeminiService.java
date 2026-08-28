@@ -39,9 +39,6 @@ public class GeminiService {
 
     /**
      * Sends a prompt to Gemini and returns the freeform text response
-     *
-     * @param prompt The prompt to send to Gemini
-     * @return The response from Gemini
      */
     public String generateContent(String prompt) {
         return generate(prompt, null);
@@ -50,11 +47,6 @@ public class GeminiService {
     /**
      * Sends a prompt to Gemini constrained to return JSON matching the given schema, and
      * returns the raw JSON response text (ready to be deserialized by the caller).
-     *
-     * @param prompt     The prompt to send to Gemini
-     * @param jsonSchema A JSON Schema (as a Map, per org.json-schema conventions: "type",
-     *                   "properties", "required", etc.) the response must conform to
-     * @return The JSON response from Gemini
      */
     public String generateJson(String prompt, Map<String, Object> jsonSchema) {
         ResponseFormat responseFormat = new ResponseFormat();
