@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class FeedbackService {
 
-    private final FeedbackAnalysisService feedbackAnalysisService;
+    private final AnalysisService analysisService;
     private final FileService fileService;
     private List<EnhancedFeedback> enhancedFeedbackCache = null;
 
-    public FeedbackService(FeedbackAnalysisService feedbackAnalysisService, FileService fileService) {
-        this.feedbackAnalysisService = feedbackAnalysisService;
+    public FeedbackService(AnalysisService analysisService, FileService fileService) {
+        this.analysisService = analysisService;
         this.fileService = fileService;
     }
 
@@ -53,7 +53,7 @@ public class FeedbackService {
     private EnhancedFeedback enhanceFeedback(FeedbackEntry entry) {
         EnhancedFeedback enhancedEntry = new EnhancedFeedback(entry);
 
-        FeedbackAnalysis analysis = feedbackAnalysisService.analyze(entry);
+        FeedbackAnalysis analysis = analysisService.analyze(entry);
         enhancedEntry.setSentiment(analysis.sentiment());
         enhancedEntry.setCategory(analysis.category());
         enhancedEntry.setActionableInsight(analysis.actionableInsight());

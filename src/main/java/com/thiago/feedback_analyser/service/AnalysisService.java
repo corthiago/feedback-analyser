@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class FeedbackAnalysisService {
+public class AnalysisService {
 
     // Constrains Gemini's structured output to exactly the fields FeedbackAnalysis needs
     private static final Map<String, Object> ANALYSIS_SCHEMA = Map.of(
@@ -33,7 +33,7 @@ public class FeedbackAnalysisService {
     private final GeminiService geminiService;
     private final ObjectMapper objectMapper;
 
-    public FeedbackAnalysisService(GeminiService geminiService, ObjectMapper objectMapper) {
+    public AnalysisService(GeminiService geminiService, ObjectMapper objectMapper) {
         this.geminiService = geminiService;
         this.objectMapper = objectMapper;
     }

@@ -12,10 +12,10 @@ public class FileService {
 
     private static final String FEEDBACKS_FILE_PATH = "sentiment_feedback.txt";
 
-    private final FeedbackParserService feedbackParserService;
+    private final ParserService parserService;
 
-    public FileService(FeedbackParserService feedbackParserService) {
-        this.feedbackParserService = feedbackParserService;
+    public FileService(ParserService parserService) {
+        this.parserService = parserService;
     }
 
     /**
@@ -32,7 +32,7 @@ public class FileService {
                 // Process each line
                 if (line.trim().isEmpty() && entryText.length() > 0) {
                     // We've reached the end of an entry
-                    FeedbackEntry entry = feedbackParserService.parseFeedbackEntry(entryText.toString());
+                    FeedbackEntry entry = parserService.parseFeedbackEntry(entryText.toString());
                     if (entry != null) {
                         entries.add(entry);
                     }
@@ -44,7 +44,7 @@ public class FileService {
 
             // Process the last entry if there is one
             if (entryText.length() > 0) {
-                FeedbackEntry entry = feedbackParserService.parseFeedbackEntry(entryText.toString());
+                FeedbackEntry entry = parserService.parseFeedbackEntry(entryText.toString());
                 if (entry != null) {
                     entries.add(entry);
                 }

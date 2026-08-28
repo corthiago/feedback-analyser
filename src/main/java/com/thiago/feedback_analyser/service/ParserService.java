@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class FeedbackParserService {
+public class ParserService {
 
     private static final Pattern FEEDBACK_PATTERN = Pattern.compile("Feedback #(\\d+)");
     private static final Pattern CUSTOMER_PATTERN = Pattern.compile("Customer:\\s*(.+)");
