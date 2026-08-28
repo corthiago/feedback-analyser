@@ -6,6 +6,7 @@ package com.thiago.feedback_analyser.model;
 public class EnhancedFeedback extends FeedbackEntry {
     private String category;
     private String actionableInsight;
+    private String sentiment;
 
     public EnhancedFeedback() {
         super();
@@ -15,7 +16,6 @@ public class EnhancedFeedback extends FeedbackEntry {
         super(entry.getId(), entry.getCustomer(), entry.getDepartment(), entry.getComment());
     }
 
-    // Getters and setters for additional fields
     public String getCategory() {
         return category;
     }
@@ -30,5 +30,13 @@ public class EnhancedFeedback extends FeedbackEntry {
 
     public void setActionableInsight(String actionableInsight) {
         this.actionableInsight = actionableInsight;
+    }
+
+    public String getSentiment() {
+        return sentiment;
+    }
+
+    public void setSentiment(String sentiment) {
+        this.sentiment = sentiment;
     }
 }

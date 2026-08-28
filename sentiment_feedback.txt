@@ -388,3 +388,9 @@ Department: Sales
 Date: 2026-08-27T20:54:17.375310
 Comment: hated the app
 
+Feedback #54
+Customer: Rupert
+Department: IT
+Date: 2026-08-27T22:31:52.923431
+Comment: Checkout process was quick and efficient. Self-checkout machines were all working properly.
+

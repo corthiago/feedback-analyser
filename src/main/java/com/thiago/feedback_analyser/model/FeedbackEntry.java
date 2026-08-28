@@ -11,7 +11,7 @@ public class FeedbackEntry {
     private String department;
     private LocalDateTime date;
     private String comment;
-    private String sentiment;
+
 
     public FeedbackEntry() {
     }
@@ -22,7 +22,6 @@ public class FeedbackEntry {
         this.department = department;
         this.date = LocalDateTime.now();
         this.comment = comment;
-        this.sentiment = sentiment;
     }
 
     public int getId() {
@@ -65,11 +64,4 @@ public class FeedbackEntry {
         this.comment = comment;
     }
 
-    public String getSentiment() {
-        return sentiment;
-    }
-
-    public void setSentiment(String sentiment) {
-        this.sentiment = sentiment;
-    }
 }

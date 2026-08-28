@@ -259,9 +259,10 @@ public class FeedbackService {
         int nextId = entries.stream().mapToInt(FeedbackEntry::getId).max().orElse(0) + 1;
 
         FeedbackEntry entry = new FeedbackEntry(nextId, customer, department, comment);
+        appendFeedbackEntry(entry);
+
         EnhancedFeedback enhanced = enhanceFeedback(entry);
 
-        appendFeedbackEntry(enhanced);
 
         if (enhancedFeedbackCache != null) {
             enhancedFeedbackCache.add(enhanced);
@@ -274,14 +275,13 @@ public class FeedbackService {
     /**
      * Appends a feedback entry to the sentiment file in the same format readFeedbackData parses.
      */
-    private void appendFeedbackEntry(EnhancedFeedback entry) throws IOException {
+    private void appendFeedbackEntry(FeedbackEntry entry) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(SENTIMENT_FILE_PATH, true))) {
             writer.write("Feedback #" + entry.getId() + "\n");
             writer.write("Customer: " + entry.getCustomer() + "\n");
             writer.write("Department: " + entry.getDepartment() + "\n");
             writer.write("Date: " + entry.getDate() + "\n");
             writer.write("Comment: " + entry.getComment() + "\n");
-            writer.write("Sentiment: " + entry.getSentiment() + "\n");
             writer.write("\n");
         }
     }
