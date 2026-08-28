@@ -138,6 +138,9 @@
 
     const palette = ['#6366f1', '#10b981', '#f43f5e', '#f59e0b', '#38bdf8', '#a78bfa', '#f472b6', '#2dd4bf'];
 
+    // Fixed colors for the sentiment chart: green/red/purple from the palette, regardless of label order
+    const sentimentColorMap = { 'Positive': '#10b981', 'Negative': '#f43f5e', 'Neutral': '#a78bfa' };
+
     // Prepare chart data
     const prepareChartData = (dataObject) => {
         const labels = Object.keys(dataObject);
@@ -155,10 +158,26 @@
         };
     };
 
+    const prepareSentimentChartData = (dataObject) => {
+        const labels = Object.keys(dataObject);
+        const values = Object.values(dataObject);
+        const backgroundColors = labels.map((label, i) => sentimentColorMap[label] || palette[i % palette.length]);
+
+        return {
+            labels,
+            datasets: [{
+                data: values,
+                backgroundColor: backgroundColors,
+                borderColor: '#0f172a',
+                borderWidth: 2
+            }]
+        };
+    };
+
     // Create sentiment chart
     const createSentimentChart = () => {
         const ctx = document.getElementById('sentimentChart').getContext('2d');
-        const data = prepareChartData(summaryData.sentimentCounts);
+        const data = prepareSentimentChartData(summaryData.sentimentCounts);
 
         new Chart(ctx, {
             type: 'pie',
