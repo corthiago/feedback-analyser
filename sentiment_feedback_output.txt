@@ -434,3 +434,10 @@ Date: 2026-08-27T19:32:11.477331
 Comment: Great selection of products available. I appreciated the seasonal decorations.
 Sentiment: Positive
 
+Feedback #53
+Customer: Nathalia
+Department: Sales
+Date: 2026-08-27T20:54:17.375310
+Comment: hated the app
+Sentiment: Negative
+

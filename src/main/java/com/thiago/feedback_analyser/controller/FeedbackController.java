@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Controller for feedback-related endpoints.
@@ -52,7 +54,10 @@ public class FeedbackController {
     @GetMapping("/feedback/all")
     public String allFeedback(Model model) {
         try {
-            model.addAttribute("feedbackList", feedbackService.getEnhancedFeedback());
+            List<EnhancedFeedback> feedbackList = feedbackService.getEnhancedFeedback().stream()
+                    .sorted(Comparator.comparing(EnhancedFeedback::getDate).reversed())
+                    .collect(Collectors.toList());
+            model.addAttribute("feedbackList", feedbackList);
             return "all-feedback";
         } catch (IOException e) {
             model.addAttribute("error", "Error loading feedback data: " + e.getMessage());
