@@ -18,9 +18,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Controller for feedback-related endpoints.
- */
 @Controller
 public class FeedbackController {
 
@@ -29,9 +26,6 @@ public class FeedbackController {
 
     /**
      * Displays the dashboard page.
-     *
-     * @param model Model to add attributes to
-     * @return The name of the view to render
      */
     @GetMapping("/")
     public String dashboard(Model model) {
@@ -47,9 +41,6 @@ public class FeedbackController {
 
     /**
      * Displays the full feedback list.
-     *
-     * @param model Model to add attributes to
-     * @return The name of the view to render
      */
     @GetMapping("/feedback/all")
     public String allFeedback(Model model) {
@@ -67,8 +58,6 @@ public class FeedbackController {
 
     /**
      * Displays the form for creating a new feedback entry.
-     *
-     * @return The name of the view to render
      */
     @GetMapping("/feedback/new")
     public String newFeedbackForm() {
@@ -77,17 +66,14 @@ public class FeedbackController {
 
     /**
      * Creates a new feedback entry and redirects back to the dashboard.
-     *
-     * @return Redirect to the dashboard
      */
     @PostMapping("/feedback")
     public String createFeedback(@RequestParam String customer,
                                   @RequestParam String department,
                                   @RequestParam String comment,
-                                  @RequestParam(required = false) String sentiment,
                                   RedirectAttributes redirectAttributes) {
         try {
-            feedbackService.createFeedback(customer, department, comment, sentiment);
+            feedbackService.createFeedback(customer, department, comment);
             redirectAttributes.addFlashAttribute("success", "Feedback submitted successfully.");
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("error", "Error creating feedback: " + e.getMessage());
@@ -97,8 +83,6 @@ public class FeedbackController {
 
     /**
      * Returns all feedback data in JSON format.
-     *
-     * @return List of enhanced feedback entries
      */
     @GetMapping("/getfeedback")
     @ResponseBody

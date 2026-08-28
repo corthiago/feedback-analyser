@@ -29,7 +29,7 @@ public class FeedbackService {
     private GeminiService geminiService;
 
     // Path to sentiment analysis output file
-    private static final String SENTIMENT_FILE_PATH = "sentiment_feedback_output.txt";
+    private static final String SENTIMENT_FILE_PATH = "sentiment_feedback.txt";
 
     // Patterns for parsing feedback file
     private static final Pattern FEEDBACK_PATTERN = Pattern.compile("Feedback #(\\d+)");
@@ -133,12 +133,6 @@ public class FeedbackService {
             entry.setComment(commentMatcher.group(1));
         }
 
-        // Extract sentiment
-        Matcher sentimentMatcher = SENTIMENT_PATTERN.matcher(text);
-        if (sentimentMatcher.find()) {
-            entry.setSentiment(sentimentMatcher.group(1));
-        }
-
         return entry;
     }
 
@@ -194,19 +188,19 @@ public class FeedbackService {
         String prompt = String.format("""
             You are an AI assistant specialized in customer feedback analysis.
             Analyze the following customer feedback and:
-            1. Categorize the feedback into one of these categories: Product Quality, Customer Service, Store Experience, Website/App, Delivery, Price/Value, Inventory/Stock, or Other.
-            2. Provide a specific actionable insight or recommendation based on the feedback.
+            1. Classify the sentiment of the following customer feedback comment. Respond with exactly one word: Positive, Neutral, or Negative. No punctuation or explanation.
+            2. Categorize the feedback into one of these categories: Product Quality, Customer Service, Store Experience, Website/App, Delivery, Price/Value, Inventory/Stock, or Other.
+            3. Provide a specific actionable insight or recommendation based on the feedback.
             
-            Format your response as JSON with two fields: "category" and "actionableInsight".
+            Format your response as JSON with three fields: "sentiment", "category" and "actionableInsight".
             Keep your response concise but insightful.
             
             Customer Feedback:
             Comment: %s
             Department: %s
-            Sentiment: %s
             
             Provide the category and actionable insight as JSON:
-            """, entry.getComment(), entry.getDepartment(), entry.getSentiment());
+            """, entry.getComment(), entry.getDepartment());
 
         try {
             // Call Gemini API and parse the response
@@ -215,6 +209,15 @@ public class FeedbackService {
             // Parse JSON response
             // This is a simple parsing approach - for production, use a proper JSON parser
             String jsonResponse = response.trim();
+
+            // Extract sentiment
+            Pattern sentimentPattern = Pattern.compile("\"sentiment\"\\s*:\\s*\"([^\"]+)\"");
+            Matcher sentimentMatcher = sentimentPattern.matcher(jsonResponse);
+            if (sentimentMatcher.find()) {
+                enhancedEntry.setSentiment(sentimentMatcher.group(1));
+            } else {
+                enhancedEntry.setSentiment("Uncategorized");
+            }
 
             // Extract category
             Pattern categoryPattern = Pattern.compile("\"category\"\\s*:\\s*\"([^\"]+)\"");
@@ -251,20 +254,15 @@ public class FeedbackService {
      * @return The newly created, enhanced feedback entry
      * @throws IOException If an I/O error occurs
      */
-    public synchronized EnhancedFeedback createFeedback(String customer, String department,
-                                                         String comment, String sentiment) throws IOException {
+    public synchronized EnhancedFeedback createFeedback(String customer, String department, String comment) throws IOException {
         List<FeedbackEntry> entries = readFeedbackData();
         int nextId = entries.stream().mapToInt(FeedbackEntry::getId).max().orElse(0) + 1;
 
-        String resolvedSentiment = (sentiment == null || sentiment.isBlank())
-                ? analyzeSentiment(comment)
-                : sentiment;
-
-        var date = LocalDateTime.now();
-        FeedbackEntry entry = new FeedbackEntry(nextId, customer, department, date, comment, resolvedSentiment);
-        appendFeedbackEntry(entry);
-
+        FeedbackEntry entry = new FeedbackEntry(nextId, customer, department, comment);
         EnhancedFeedback enhanced = enhanceFeedback(entry);
+
+        appendFeedbackEntry(enhanced);
+
         if (enhancedFeedbackCache != null) {
             enhancedFeedbackCache.add(enhanced);
         }
@@ -272,32 +270,11 @@ public class FeedbackService {
         return enhanced;
     }
 
-    /**
-     * Uses Gemini to classify a comment's sentiment as Positive, Neutral, or Negative.
-     */
-    private String analyzeSentiment(String comment) {
-        String prompt = String.format("""
-            Classify the sentiment of the following customer feedback comment.
-            Respond with exactly one word: Positive, Neutral, or Negative. No punctuation or explanation.
-
-            Comment: %s
-            """, comment);
-
-        String response = geminiService.generateContent(prompt).trim().toLowerCase();
-
-        if (response.contains("positive")) {
-            return "Positive";
-        }
-        if (response.contains("negative")) {
-            return "Negative";
-        }
-        return "Neutral";
-    }
 
     /**
      * Appends a feedback entry to the sentiment file in the same format readFeedbackData parses.
      */
-    private void appendFeedbackEntry(FeedbackEntry entry) throws IOException {
+    private void appendFeedbackEntry(EnhancedFeedback entry) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(SENTIMENT_FILE_PATH, true))) {
             writer.write("Feedback #" + entry.getId() + "\n");
             writer.write("Customer: " + entry.getCustomer() + "\n");
@@ -346,10 +323,10 @@ public class FeedbackService {
         }
         summary.setDepartmentCounts(departmentCounts);
 
-        // Get recent feedback (last 5 entries)
+        // Get recent feedback (last 10 entries)
         List<EnhancedFeedback> recentFeedback = allFeedback.stream()
                 .sorted(Comparator.comparing(EnhancedFeedback::getId).reversed())
-                .limit(5)
+                .limit(10)
                 .collect(Collectors.toList());
         summary.setRecentFeedback(recentFeedback);
 

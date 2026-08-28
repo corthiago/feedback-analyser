@@ -16,12 +16,11 @@ public class FeedbackEntry {
     public FeedbackEntry() {
     }
 
-    public FeedbackEntry(int id, String customer, String department,
-                         LocalDateTime date, String comment, String sentiment) {
+    public FeedbackEntry(int id, String customer, String department, String comment) {
         this.id = id;
         this.customer = customer;
         this.department = department;
-        this.date = date;
+        this.date = LocalDateTime.now();
         this.comment = comment;
         this.sentiment = sentiment;
     }

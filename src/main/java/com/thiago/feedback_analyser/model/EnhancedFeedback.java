@@ -12,8 +12,7 @@ public class EnhancedFeedback extends FeedbackEntry {
     }
 
     public EnhancedFeedback(FeedbackEntry entry) {
-        super(entry.getId(), entry.getCustomer(), entry.getDepartment(),
-                entry.getDate(), entry.getComment(), entry.getSentiment());
+        super(entry.getId(), entry.getCustomer(), entry.getDepartment(), entry.getComment());
     }
 
     // Getters and setters for additional fields
