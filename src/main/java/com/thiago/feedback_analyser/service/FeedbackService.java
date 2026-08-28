@@ -29,7 +29,7 @@ public class FeedbackService {
     private GeminiService geminiService;
 
     // Path to sentiment analysis output file
-    private static final String SENTIMENT_FILE_PATH = "sentiment_feedback.txt";
+    private static final String FEEDBACKS_FILE_PATH = "sentiment_feedback.txt";
 
     // Patterns for parsing feedback file
     private static final Pattern FEEDBACK_PATTERN = Pattern.compile("Feedback #(\\d+)");
@@ -51,21 +51,21 @@ public class FeedbackService {
     public List<FeedbackEntry> readFeedbackData() throws IOException {
         List<FeedbackEntry> entries = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(SENTIMENT_FILE_PATH))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FEEDBACKS_FILE_PATH))) {
             StringBuilder entryText = new StringBuilder();
             String line;
 
-            boolean inDetailedSection = false;
+//            boolean inDetailedSection = false;
             while ((line = reader.readLine()) != null) {
-                // Check if we've reached the detailed feedback section
-                if (line.contains("## Detailed Feedback Entries")) {
-                    inDetailedSection = true;
-                    continue;
-                }
-
-                if (!inDetailedSection) {
-                    continue;
-                }
+//                // Check if we've reached the detailed feedback section
+//                if (line.contains("## Detailed Feedback Entries")) {
+//                    inDetailedSection = true;
+//                    continue;
+//                }
+//
+//                if (!inDetailedSection) {
+//                    continue;
+//                }
 
                 // Process each line
                 if (line.trim().isEmpty() && entryText.length() > 0) {
@@ -276,7 +276,7 @@ public class FeedbackService {
      * Appends a feedback entry to the sentiment file in the same format readFeedbackData parses.
      */
     private void appendFeedbackEntry(FeedbackEntry entry) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(SENTIMENT_FILE_PATH, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FEEDBACKS_FILE_PATH, true))) {
             writer.write("Feedback #" + entry.getId() + "\n");
             writer.write("Customer: " + entry.getCustomer() + "\n");
             writer.write("Department: " + entry.getDepartment() + "\n");
