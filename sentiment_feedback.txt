@@ -300,39 +300,3 @@ Comment: Store layout is functional. Parking was difficult to find.
 
 
 
-Feedback #51
-Customer: Thiago
-Department: Sales
-Date: 2026-08-27
-Comment: Product I wanted was out of stock. I might reconsider shopping here in the future.
-
-Feedback #52
-Customer: Thiago
-Department: Sales
-Date: 2026-08-27T19:32:11.477331
-Comment: Great selection of products available. I appreciated the seasonal decorations.
-
-Feedback #53
-Customer: Nathalia
-Department: Sales
-Date: 2026-08-27T20:54:17.375310
-Comment: hated the app
-
-Feedback #54
-Customer: Rupert
-Department: IT
-Date: 2026-08-27T22:31:52.923431
-Comment: Checkout process was quick and efficient. Self-checkout machines were all working properly.
-
-Feedback #55
-Customer: Nathalia
-Department: Sales
-Date: 2026-08-27T23:04:32.174162
-Comment: Prices are comparable to other stores. The store was very crowded during my visit.
-
-Feedback #56
-Customer: Rupert
-Department: IT
-Date: 2026-08-28T13:11:53.391567
-Comment: I liked the app
-
