@@ -3,17 +3,9 @@ package com.thiago.feedback_analyser.service;
 import com.thiago.feedback_analyser.model.EnhancedFeedback;
 import com.thiago.feedback_analyser.model.FeedbackEntry;
 import com.thiago.feedback_analyser.model.FeedbackSummary;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,135 +17,19 @@ import java.util.stream.Collectors;
 @Service
 public class FeedbackService {
 
-    @Autowired
-    private GeminiService geminiService;
-
-    // Path to sentiment analysis output file
-    private static final String FEEDBACKS_FILE_PATH = "sentiment_feedback.txt";
-
-    // Patterns for parsing feedback file
-    private static final Pattern FEEDBACK_PATTERN = Pattern.compile("Feedback #(\\d+)");
-    private static final Pattern CUSTOMER_PATTERN = Pattern.compile("Customer:\\s*(.+)");
-    private static final Pattern DEPARTMENT_PATTERN = Pattern.compile("Department:\\s*(.+)");
-    private static final Pattern DATE_PATTERN = Pattern.compile("Date:\\s*(.+)");
-    private static final Pattern COMMENT_PATTERN = Pattern.compile("Comment:\\s*(.+)");
-    private static final Pattern SENTIMENT_PATTERN = Pattern.compile("Sentiment:\\s*(.+)");
+    private final GeminiService geminiService;
+    private final FileService fileService;
 
     // Cache for feedback data
     private List<EnhancedFeedback> enhancedFeedbackCache = null;
 
-    /**
-     * Reads feedback data from the sentiment analysis output file.
-     *
-     * @return List of FeedbackEntry objects
-     * @throws IOException If an I/O error occurs
-     */
-    public List<FeedbackEntry> readFeedbackData() throws IOException {
-        List<FeedbackEntry> entries = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(FEEDBACKS_FILE_PATH))) {
-            StringBuilder entryText = new StringBuilder();
-            String line;
-
-//            boolean inDetailedSection = false;
-            while ((line = reader.readLine()) != null) {
-//                // Check if we've reached the detailed feedback section
-//                if (line.contains("## Detailed Feedback Entries")) {
-//                    inDetailedSection = true;
-//                    continue;
-//                }
-//
-//                if (!inDetailedSection) {
-//                    continue;
-//                }
-
-                // Process each line
-                if (line.trim().isEmpty() && entryText.length() > 0) {
-                    // We've reached the end of an entry
-                    FeedbackEntry entry = parseFeedbackEntry(entryText.toString());
-                    if (entry != null) {
-                        entries.add(entry);
-                    }
-                    entryText = new StringBuilder();
-                } else {
-                    entryText.append(line).append("\n");
-                }
-            }
-
-            // Process the last entry if there is one
-            if (entryText.length() > 0) {
-                FeedbackEntry entry = parseFeedbackEntry(entryText.toString());
-                if (entry != null) {
-                    entries.add(entry);
-                }
-            }
-        }
-
-        return entries;
-    }
-
-    /**
-     * Parses a feedback entry from text.
-     *
-     * @param text Text containing a feedback entry
-     * @return FeedbackEntry object or null if parsing fails
-     */
-    private FeedbackEntry parseFeedbackEntry(String text) {
-        FeedbackEntry entry = new FeedbackEntry();
-
-        // Extract feedback ID
-        Matcher idMatcher = FEEDBACK_PATTERN.matcher(text);
-        if (idMatcher.find()) {
-            entry.setId(Integer.parseInt(idMatcher.group(1)));
-        } else {
-            return null;
-        }
-
-        // Extract customer
-        Matcher customerMatcher = CUSTOMER_PATTERN.matcher(text);
-        if (customerMatcher.find()) {
-            entry.setCustomer(customerMatcher.group(1));
-        }
-
-        // Extract department
-        Matcher departmentMatcher = DEPARTMENT_PATTERN.matcher(text);
-        if (departmentMatcher.find()) {
-            entry.setDepartment(departmentMatcher.group(1));
-        }
-
-        // Extract date
-        Matcher dateMatcher = DATE_PATTERN.matcher(text);
-        if (dateMatcher.find()) {
-            entry.setDate(parseDate(dateMatcher.group(1)));
-        }
-
-        // Extract comment
-        Matcher commentMatcher = COMMENT_PATTERN.matcher(text);
-        if (commentMatcher.find()) {
-            entry.setComment(commentMatcher.group(1));
-        }
-
-        return entry;
-    }
-
-    /**
-     * Parses a date string into a LocalDateTime. Handles both full timestamps (written by
-     * createFeedback going forward) and legacy date-only strings (from the original sample
-     * data), which are interpreted as start-of-day.
-     */
-    private LocalDateTime parseDate(String raw) {
-        try {
-            return LocalDateTime.parse(raw);
-        } catch (DateTimeParseException e) {
-            return LocalDate.parse(raw).atStartOfDay();
-        }
+    public FeedbackService(GeminiService geminiService, FileService fileService) {
+        this.geminiService = geminiService;
+        this.fileService = fileService;
     }
 
     /**
      * Enhances feedback with AI-generated categories and actionable insights.
-     *
-     * @return List of EnhancedFeedback objects
-     * @throws IOException If an I/O error occurs
      */
     public synchronized List<EnhancedFeedback> getEnhancedFeedback() throws IOException {
         // Return cached data if available
@@ -161,7 +37,7 @@ public class FeedbackService {
             return enhancedFeedbackCache;
         }
 
-        List<FeedbackEntry> entries = readFeedbackData();
+        List<FeedbackEntry> entries = fileService.readFeedbackData();
         List<EnhancedFeedback> enhancedEntries = new ArrayList<>();
 
         for (FeedbackEntry entry : entries) {
@@ -255,11 +131,11 @@ public class FeedbackService {
      * @throws IOException If an I/O error occurs
      */
     public synchronized EnhancedFeedback createFeedback(String customer, String department, String comment) throws IOException {
-        List<FeedbackEntry> entries = readFeedbackData();
+        List<FeedbackEntry> entries = fileService.readFeedbackData();
         int nextId = entries.stream().mapToInt(FeedbackEntry::getId).max().orElse(0) + 1;
 
         FeedbackEntry entry = new FeedbackEntry(nextId, customer, department, comment);
-        appendFeedbackEntry(entry);
+        fileService.appendFeedbackEntry(entry);
 
         EnhancedFeedback enhanced = enhanceFeedback(entry);
 
@@ -271,20 +147,6 @@ public class FeedbackService {
         return enhanced;
     }
 
-
-    /**
-     * Appends a feedback entry to the sentiment file in the same format readFeedbackData parses.
-     */
-    private void appendFeedbackEntry(FeedbackEntry entry) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FEEDBACKS_FILE_PATH, true))) {
-            writer.write("Feedback #" + entry.getId() + "\n");
-            writer.write("Customer: " + entry.getCustomer() + "\n");
-            writer.write("Department: " + entry.getDepartment() + "\n");
-            writer.write("Date: " + entry.getDate() + "\n");
-            writer.write("Comment: " + entry.getComment() + "\n");
-            writer.write("\n");
-        }
-    }
 
     /**
      * Generates a summary of the feedback data for the dashboard.
