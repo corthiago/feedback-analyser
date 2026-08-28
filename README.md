@@ -8,6 +8,16 @@ A retail customer feedback dashboard that uses Google Gemini to automatically ta
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3-06B6D4?logo=tailwindcss&logoColor=white)
 ![Gemini](https://img.shields.io/badge/Google%20Gemini-API-8E75B2?logo=googlegemini&logoColor=white)
 
+## Screenshots
+
+**Dashboard**
+
+![Dashboard screenshot](docs/dashboard-screenshot.png)
+
+**Submitting new feedback**
+
+![New feedback form screenshot](docs/new-feedback-screenshot.png)
+
 ## Overview
 
 Feedback Analyser reads customer feedback (customer, department, comment) and enriches every entry with AI-generated sentiment, category, and a concrete actionable insight, then shows it all on a dashboard with charts and a searchable feedback list. It's a small, self-contained Spring Boot app — feedback is stored in a plain text file rather than a database, so there's nothing to provision before you run it. You can also submit new feedback straight from the UI and watch Gemini analyse it in real time.
@@ -23,15 +33,6 @@ Feedback Analyser reads customer feedback (customer, department, comment) and en
 - **No database required** — feedback is persisted to a flat text file and parsed back into objects on read.
 - **Unit tested Gemini client** — `GeminiServiceTest` and `InteractionResponseTest` cover the request-building and response-parsing logic with Mockito.
 
-## Screenshots
-
-**Dashboard**
-
-![Dashboard screenshot](docs/dashboard-screenshot.png)
-
-**Submitting new feedback**
-
-![New feedback form screenshot](docs/new-feedback-screenshot.png)
 
 ## How the AI integration works
 
