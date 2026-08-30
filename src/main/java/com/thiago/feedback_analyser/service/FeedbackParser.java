@@ -1,6 +1,6 @@
 package com.thiago.feedback_analyser.service;
 
-import com.thiago.feedback_analyser.model.FeedbackEntry;
+import com.thiago.feedback_analyser.model.EnhancedFeedback;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -10,19 +10,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class ParserService {
+public class FeedbackParser {
 
     private static final Pattern FEEDBACK_PATTERN = Pattern.compile("Feedback #(\\d+)");
     private static final Pattern CUSTOMER_PATTERN = Pattern.compile("Customer:\\s*(.+)");
     private static final Pattern DEPARTMENT_PATTERN = Pattern.compile("Department:\\s*(.+)");
     private static final Pattern DATE_PATTERN = Pattern.compile("Date:\\s*(.+)");
     private static final Pattern COMMENT_PATTERN = Pattern.compile("Comment:\\s*(.+)");
+    private static final Pattern SENTIMENT_PATTERN = Pattern.compile("Sentiment:\\s*(.+)");
+    private static final Pattern CATEGORY_PATTERN = Pattern.compile("Category:\\s*(.+)");
+    private static final Pattern INSIGHT_PATTERN = Pattern.compile("Insight:\\s*(.+)");
 
     /**
      * Parses a feedback entry from text.
      */
-    public FeedbackEntry parseFeedbackEntry(String text) {
-        FeedbackEntry entry = new FeedbackEntry();
+    public EnhancedFeedback parseEnhancedFeedback(String text) {
+        EnhancedFeedback entry = new EnhancedFeedback();
 
         // Extract feedback ID
         Matcher idMatcher = FEEDBACK_PATTERN.matcher(text);
@@ -54,6 +57,24 @@ public class ParserService {
         Matcher commentMatcher = COMMENT_PATTERN.matcher(text);
         if (commentMatcher.find()) {
             entry.setComment(commentMatcher.group(1));
+        }
+
+        // Extract sentiment
+        Matcher sentimentMatcher = SENTIMENT_PATTERN.matcher(text);
+        if (sentimentMatcher.find()) {
+            entry.setSentiment(sentimentMatcher.group(1));
+        }
+
+        // Extract category
+        Matcher categoryMatcher = CATEGORY_PATTERN.matcher(text);
+        if (categoryMatcher.find()) {
+            entry.setCategory(categoryMatcher.group(1));
+        }
+
+        // Extract insight
+        Matcher insightMatcher = INSIGHT_PATTERN.matcher(text);
+        if (insightMatcher.find()) {
+            entry.setActionableInsight(insightMatcher.group(1));
         }
 
         return entry;

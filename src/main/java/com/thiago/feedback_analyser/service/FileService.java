@@ -1,6 +1,6 @@
 package com.thiago.feedback_analyser.service;
 
-import com.thiago.feedback_analyser.model.FeedbackEntry;
+import com.thiago.feedback_analyser.model.EnhancedFeedback;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -12,17 +12,17 @@ public class FileService {
 
     private static final String FEEDBACKS_FILE_PATH = "sentiment_feedback.txt";
 
-    private final ParserService parserService;
+    private final FeedbackParser feedbackParser;
 
-    public FileService(ParserService parserService) {
-        this.parserService = parserService;
+    public FileService(FeedbackParser feedbackParser) {
+        this.feedbackParser = feedbackParser;
     }
 
     /**
      * Reads feedback data from the sentiment analysis output file.
      */
-    public List<FeedbackEntry> readFeedbackData() throws IOException {
-        List<FeedbackEntry> entries = new ArrayList<>();
+    public List<EnhancedFeedback> readFeedbackData() throws IOException {
+        List<EnhancedFeedback> entries = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(FEEDBACKS_FILE_PATH))) {
             StringBuilder entryText = new StringBuilder();
@@ -32,7 +32,7 @@ public class FileService {
                 // Process each line
                 if (line.trim().isEmpty() && entryText.length() > 0) {
                     // We've reached the end of an entry
-                    FeedbackEntry entry = parserService.parseFeedbackEntry(entryText.toString());
+                    EnhancedFeedback entry = feedbackParser.parseEnhancedFeedback(entryText.toString());
                     if (entry != null) {
                         entries.add(entry);
                     }
@@ -44,7 +44,7 @@ public class FileService {
 
             // Process the last entry if there is one
             if (entryText.length() > 0) {
-                FeedbackEntry entry = parserService.parseFeedbackEntry(entryText.toString());
+                EnhancedFeedback entry = feedbackParser.parseEnhancedFeedback(entryText.toString());
                 if (entry != null) {
                     entries.add(entry);
                 }
@@ -56,15 +56,18 @@ public class FileService {
 
 
     /**
-     * Appends a feedback entry to the sentiment file in the same format readFeedbackData parses.
+     * Appends a feedback to the sentiment file in the same format readFeedbackData parses.
      */
-    public void appendFeedbackEntry(FeedbackEntry entry) throws IOException {
+    public void appendFeedback(EnhancedFeedback feedback) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FEEDBACKS_FILE_PATH, true))) {
-            writer.write("Feedback #" + entry.getId() + "\n");
-            writer.write("Customer: " + entry.getCustomer() + "\n");
-            writer.write("Department: " + entry.getDepartment() + "\n");
-            writer.write("Date: " + entry.getDate() + "\n");
-            writer.write("Comment: " + entry.getComment() + "\n");
+            writer.write("Feedback #" + feedback.getId() + "\n");
+            writer.write("Customer: " + feedback.getCustomer() + "\n");
+            writer.write("Department: " + feedback.getDepartment() + "\n");
+            writer.write("Date: " + feedback.getDate() + "\n");
+            writer.write("Comment: " + feedback.getComment() + "\n");
+            writer.write("Sentiment: " + feedback.getSentiment() + "\n");
+            writer.write("Category: " + feedback.getCategory() + "\n");
+            writer.write("Insight: " + feedback.getActionableInsight() + "\n");
             writer.write("\n");
         }
     }

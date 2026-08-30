@@ -34,12 +34,7 @@ public class FeedbackService {
             return enhancedFeedbackCache;
         }
 
-        List<FeedbackEntry> entries = fileService.readFeedbackData();
-        List<EnhancedFeedback> enhancedEntries = new ArrayList<>();
-        for (FeedbackEntry entry : entries) {
-            EnhancedFeedback enhancedEntry = enhanceFeedback(entry);
-            enhancedEntries.add(enhancedEntry);
-        }
+        List<EnhancedFeedback> enhancedEntries = fileService.readFeedbackData();
 
         // Cache the enhanced feedback
         enhancedFeedbackCache = enhancedEntries;
@@ -66,14 +61,14 @@ public class FeedbackService {
      * with AI-generated category/insight, and appends it to the in-memory cache.
      */
     public synchronized EnhancedFeedback createFeedback(String customer, String department, String comment) throws IOException {
-        List<FeedbackEntry> entries = fileService.readFeedbackData();
-        int nextId = entries.stream().mapToInt(FeedbackEntry::getId).max().orElse(0) + 1;
+        List<EnhancedFeedback> entries = fileService.readFeedbackData();
+        int nextId = entries.stream().mapToInt(EnhancedFeedback::getId).max().orElse(0) + 1;
 
         FeedbackEntry entry = new FeedbackEntry(nextId, customer, department, comment);
-        fileService.appendFeedbackEntry(entry);
 
         EnhancedFeedback enhanced = enhanceFeedback(entry);
 
+        fileService.appendFeedback(enhanced);
 
         if (enhancedFeedbackCache != null) {
             enhancedFeedbackCache.add(enhanced);

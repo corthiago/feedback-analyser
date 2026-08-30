@@ -1,302 +1,459 @@
 Feedback #1
 Customer: Lisa Martinez, New Customer
 Department: Returns
-Date: 2025-04-24
+Date: 2026-08-29T22:29:35.907082
 Comment: The staff was very helpful and friendly. The restrooms were clean and well-maintained.
+Sentiment: Positive
+Category: Customer Service
+Insight: Recognize and commend the returns department staff for their exceptional customer service and maintain the current cleaning schedule to ensure restrooms remain consistently well-maintained.
 
 Feedback #2
 Customer: Michael Johnson, Loyalty Member
 Department: Customer Service
-Date: 2025-05-10
+Date: 2026-08-29T22:29:37.998061
 Comment: Staff seemed uninterested in helping me. The music playing in the store was too loud.
+Sentiment: Negative
+Category: Store Experience
+Insight: Train store staff on proactive customer engagement and adjust the in-store background music to a more comfortable, conversational volume.
 
 Feedback #3
 Customer: Emily Williams, Online Shopper
 Department: Returns
-Date: 2025-04-14
+Date: 2026-08-29T22:29:39.828282
 Comment: Product quality exceeded my expectations.
+Sentiment: Positive
+Category: Product Quality
+Insight: Highlight these positive reviews in marketing materials or product pages to build trust and drive conversions.
 
 Feedback #4
 Customer: James Rodriguez, Returning Customer
 Department: Electronics
-Date: 2025-05-02
+Date: 2026-08-29T22:29:41.365704
 Comment: I love the new store design! I had to travel across the store multiple times to find everything.
+Sentiment: Positive
+Category: Store Experience
+Insight: While the new store design is visually appealing and well-received, layout navigation in the Electronics department is causing customer friction. Consider adding clearer, elevated signage or category markers to help customers locate products more efficiently without needing to traverse the entire store.
 
 Feedback #5
 Customer: David Garcia, VIP Member
 Department: Checkout
-Date: 2025-05-03
+Date: 2026-08-29T22:29:43.104116
 Comment: Prices are comparable to other stores.
+Sentiment: Neutral
+Category: Price/Value
+Insight: Maintain competitive pricing to align with market standards, but consider introducing loyalty perks or targeted promotions at checkout to incentivize repeat purchases and drive perceived value higher.
 
 Feedback #6
 Customer: Lisa Martinez, New Customer
 Department: Returns
-Date: 2025-05-05
+Date: 2026-08-29T22:29:44.640783
 Comment: I had to wait too long for assistance. The store was very crowded during my visit.
+Sentiment: Negative
+Category: Store Experience
+Insight: Increase staffing at the Returns desk during peak hours and implement a queue management system to reduce perceived wait times and handle crowded store conditions.
 
 Feedback #7
 Customer: Lisa Martinez, New Customer
 Department: Customer Service
-Date: 2025-04-13
+Date: 2026-08-29T22:29:46.075124
 Comment: The shopping experience was average. Parking was difficult to find.
+Sentiment: Neutral
+Category: Store Experience
+Insight: Improve parking availability or provide better signage and directions for alternative parking areas to enhance the overall customer store experience.
 
 Feedback #8
 Customer: David Garcia, VIP Member
 Department: Product Selection
-Date: 2025-04-29
+Date: 2026-08-29T22:29:47.503928
 Comment: Customer service representative solved my problem quickly. The music playing in the store was too loud.
+Sentiment: Positive
+Category: Store Experience
+Insight: Adjust the in-store sound system to lower the volume of the background music, ensuring a more comfortable environment for shoppers while maintaining the positive standard set by the customer service team.
 
 Feedback #9
 Customer: James Rodriguez, Returning Customer
 Department: Product Selection
-Date: 2025-04-24
+Date: 2026-08-29T22:29:48.817610
 Comment: Customer service representative solved my problem quickly. The store app helped me locate products easily.
+Sentiment: Positive
+Category: Customer Service
+Insight: Recognize the customer service representative for their efficiency and ensure the mobile app's in-store product location feature continues to be maintained and promoted as a key benefit.
 
 Feedback #10
 Customer: James Rodriguez, Returning Customer
 Department: Online Shopping
-Date: 2025-04-11
+Date: 2026-08-29T22:29:50.374234
 Comment: My delivery arrived damaged.
+Sentiment: Negative
+Category: Delivery
+Insight: Investigate the packaging methods and partner courier services used for online orders to prevent transit damage.
 
 Feedback #11
 Customer: Patricia Wilson, Weekend Shopper
 Department: Home Goods
-Date: 2025-04-17
+Date: 2026-08-29T22:29:52.015983
 Comment: Store layout made it easy to find what I needed. I will definitely shop here again.
+Sentiment: Positive
+Category: Store Experience
+Insight: Maintain the current Home Goods store layout and merchandising standards as they successfully facilitate product discovery and drive customer retention.
 
 Feedback #12
 Customer: Jane Smith, First-time Shopper
 Department: Clothing
-Date: 2025-04-25
+Date: 2026-08-29T22:29:53.550151
 Comment: Too few cashiers during peak hours. The store was very crowded during my visit.
+Sentiment: Negative
+Category: Customer Service
+Insight: Increase staffing and schedule more cashiers during anticipated peak hours in the Clothing department to reduce wait times and alleviate crowding.
 
 Feedback #13
 Customer: Robert Brown, Frequent Buyer
 Department: Electronics
-Date: 2025-05-07
+Date: 2026-08-29T22:29:54.863903
 Comment: Customer service representative solved my problem quickly. I appreciated the seasonal decorations.
+Sentiment: Positive
+Category: Customer Service
+Insight: Recognize the customer service representative in the Electronics department for their quick and effective problem-solving skills to reinforce positive behaviors.
 
 Feedback #14
 Customer: John Doe, Regular Customer
 Department: Grocery
-Date: 2025-04-19
+Date: 2026-08-29T22:29:56.313074
 Comment: Store layout is functional. The restrooms were clean and well-maintained.
+Sentiment: Neutral
+Category: Store Experience
+Insight: Maintain current cleaning and maintenance schedules for restrooms and ensure the grocery store layout continues to support smooth customer navigation.
 
 Feedback #15
 Customer: Emily Williams, Online Shopper
 Department: Clothing
-Date: 2025-04-28
+Date: 2026-08-29T22:29:57.792256
 Comment: Great selection of products available.
+Sentiment: Positive
+Category: Inventory/Stock
+Insight: Continue to maintain and highlight the diverse product range in the clothing department to sustain customer satisfaction.
 
 Feedback #16
 Customer: Sarah Miller, Occasional Shopper
 Department: Electronics
-Date: 2025-05-06
+Date: 2026-08-29T22:29:59.283243
 Comment: Prices were higher than advertised online. I might reconsider shopping here in the future.
+Sentiment: Negative
+Category: Price/Value
+Insight: Audit and synchronize online pricing with in-store point-of-sale systems in the Electronics department to ensure consistency and prevent customer dissatisfaction.
 
 Feedback #17
 Customer: David Garcia, VIP Member
 Department: Returns
-Date: 2025-04-22
+Date: 2026-08-29T22:30:00.858402
 Comment: Checkout process was quick and efficient. Self-checkout machines were all working properly.
+Sentiment: Positive
+Category: Store Experience
+Insight: Maintain current maintenance schedules and staff training protocols for the self-checkout area to ensure the checkout process remains quick and efficient.
 
 Feedback #18
 Customer: Jane Smith, First-time Shopper
 Department: Grocery
-Date: 2025-04-15
+Date: 2026-08-29T22:30:02.456388
 Comment: Website navigation is intuitive and user-friendly. I appreciated the seasonal decorations.
+Sentiment: Positive
+Category: Website/App
+Insight: Maintain the current user-friendly website design and leverage seasonal decoration themes digitally and physically to continuously enhance the positive customer browsing and store experience.
 
 Feedback #19
 Customer: Michael Johnson, Loyalty Member
 Department: Home Goods
-Date: 2025-04-13
+Date: 2026-08-29T22:30:03.891617
 Comment: Website crashed during checkout. I might reconsider shopping here in the future.
+Sentiment: Negative
+Category: Website/App
+Insight: Investigate server stability and frontend errors during the checkout process to prevent cart abandonment and customer churn.
 
 Feedback #20
 Customer: John Doe, Regular Customer
 Department: Store Environment
-Date: 2025-05-09
+Date: 2026-08-29T22:30:05.430141
 Comment: Product selection is what I expected. Self-checkout machines were all working properly.
+Sentiment: Positive
+Category: Store Experience
+Insight: Maintain current maintenance routines for self-checkout machines and inventory levels to sustain high customer satisfaction.
 
 Feedback #21
 Customer: Robert Brown, Frequent Buyer
 Department: Online Shopping
-Date: 2025-04-20
+Date: 2026-08-29T22:30:06.981061
 Comment: Prices were reasonable for the quality offered. The store app helped me locate products easily.
+Sentiment: Positive
+Category: Website/App
+Insight: Continue to maintain competitive pricing and leverage the mobile app's intuitive product-location features as a key selling point in future marketing campaigns.
 
 Feedback #22
 Customer: John Doe, Regular Customer
 Department: Store Environment
-Date: 2025-04-26
+Date: 2026-08-29T22:30:08.419148
 Comment: Product I wanted was out of stock. I had to travel across the store multiple times to find everything.
+Sentiment: Negative
+Category: Inventory/Stock
+Insight: Improve inventory tracking and stock replenishment processes, and implement better store wayfinding signage or a mobile app map to help customers navigate departments efficiently.
 
 Feedback #23
 Customer: David Garcia, VIP Member
 Department: Grocery
-Date: 2025-04-16
+Date: 2026-08-29T22:30:09.933092
 Comment: I had an excellent shopping experience today. I will definitely shop here again.
+Sentiment: Positive
+Category: Store Experience
+Insight: Maintain current staff performance standards and acknowledge the grocery department team for delivering a positive customer experience.
 
 Feedback #24
 Customer: Patricia Wilson, Weekend Shopper
 Department: Customer Service
-Date: 2025-05-08
+Date: 2026-08-29T22:30:11.160359
 Comment: The store was messy and disorganized.
+Sentiment: Negative
+Category: Store Experience
+Insight: Schedule regular store recovery sweeps throughout the day, particularly during peak hours, to ensure aisles and displays remain neat, organized, and accessible to shoppers.
 
 Feedback #25
 Customer: Robert Brown, Frequent Buyer
 Department: Returns
-Date: 2025-04-18
+Date: 2026-08-29T22:30:12.910377
 Comment: Online ordering works as expected. Parking was difficult to find.
+Sentiment: Neutral
+Category: Store Experience
+Insight: Improve parking signage, designate clear parking spots for quick in-store pickups and returns, or evaluate traffic flow to enhance the in-store visit experience.
 
 Feedback #26
 Customer: Sarah Miller, Occasional Shopper
 Department: Checkout
-Date: 2025-04-12
+Date: 2026-08-29T22:30:14.546865
 Comment: I had an excellent shopping experience today. I will definitely shop here again.
+Sentiment: Positive
+Category: Store Experience
+Insight: Acknowledge and reward the checkout staff for delivering exceptional service to maintain high employee morale and encourage continued positive customer interactions.
 
 Feedback #27
 Customer: Michael Johnson, Loyalty Member
 Department: Online Shopping
-Date: 2025-05-04
+Date: 2026-08-29T22:30:15.870554
 Comment: Website navigation is intuitive and user-friendly. I appreciated the seasonal decorations.
+Sentiment: Positive
+Category: Website/App
+Insight: Maintain the current website design standards and UI/UX layout, and consider incorporating seasonal aesthetic themes more broadly or permanently during relevant holidays to enhance user engagement.
 
 Feedback #28
 Customer: John Doe, Regular Customer
 Department: Clothing
-Date: 2025-04-23
+Date: 2026-08-29T22:30:17.174579
 Comment: Product quality meets basic expectations. The music playing in the store was too loud.
+Sentiment: Neutral
+Category: Store Experience
+Insight: Adjust the in-store music volume to a more moderate level to improve the shopping environment for customers.
 
 Feedback #29
 Customer: Sarah Miller, Occasional Shopper
 Department: Returns
-Date: 2025-04-30
+Date: 2026-08-29T22:30:18.436018
 Comment: Return policy is too restrictive. I might reconsider shopping here in the future.
+Sentiment: Negative
+Category: Customer Service
+Insight: Review and update the return policy to make it more flexible and customer-friendly in order to improve retention and prevent potential churn.
 
 Feedback #30
 Customer: Jane Smith, First-time Shopper
 Department: Checkout
-Date: 2025-05-01
+Date: 2026-08-29T22:30:19.865765
 Comment: The staff was very helpful and friendly. I will definitely shop here again.
+Sentiment: Positive
+Category: Customer Service
+Insight: Recognize and commend the checkout staff for their exceptional customer service to reinforce this positive behavior.
 
 Feedback #31
 Customer: Patricia Wilson, Weekend Shopper
 Department: Online Shopping
-Date: 2025-04-21
+Date: 2026-08-29T22:30:21.258814
 Comment: Poor quality products for the price. I might reconsider shopping here in the future.
+Sentiment: Negative
+Category: Product Quality
+Insight: Review the pricing and manufacturing quality of online inventory to ensure the perceived value aligns with customer expectations.
 
 Feedback #32
 Customer: Emily Williams, Online Shopper
 Department: Store Environment
-Date: 2025-05-06
+Date: 2026-08-29T22:30:22.508590
 Comment: Store layout made it easy to find what I needed. The restrooms were clean and well-maintained.
+Sentiment: Positive
+Category: Store Experience
+Insight: Maintain current store layout standards and establish a routine cleaning schedule for restrooms to ensure consistently high customer satisfaction.
 
 Feedback #33
 Customer: David Garcia, VIP Member
 Department: Product Selection
-Date: 2025-04-15
+Date: 2026-08-29T22:30:23.898096
 Comment: Staff was professional but not exceptional. The store was very crowded during my visit.
+Sentiment: Neutral
+Category: Store Experience
+Insight: Evaluate store traffic patterns during peak hours and consider implementing crowd management strategies, such as optimizing checkout queues and floor layouts, to improve overall customer comfort.
 
 Feedback #34
 Customer: Lisa Martinez, New Customer
 Department: Electronics
-Date: 2025-04-27
+Date: 2026-08-29T22:30:25.395368
 Comment: Website navigation is intuitive and user-friendly. I will definitely shop here again.
+Sentiment: Positive
+Category: Website/App
+Insight: Maintain current UI/UX design standards for the website to ensure continued ease of use and high customer retention.
 
 Feedback #35
 Customer: Emily Williams, Online Shopper
 Department: Grocery
-Date: 2025-04-12
+Date: 2026-08-29T22:30:26.831946
 Comment: Staff seemed uninterested in helping me. The store was very crowded during my visit.
+Sentiment: Negative
+Category: Customer Service
+Insight: Implement staff engagement training and review peak-hour scheduling to ensure adequate floor coverage during high-traffic times.
 
 Feedback #36
 Customer: Robert Brown, Frequent Buyer
 Department: Home Goods
-Date: 2025-04-29
+Date: 2026-08-29T22:30:28.363798
 Comment: I had an excellent shopping experience today. The store app helped me locate products easily.
+Sentiment: Positive
+Category: Website/App
+Insight: Leverage the success of the store app's in-store navigation feature by promoting it through digital and in-store signage to increase adoption among other shoppers.
 
 Feedback #37
 Customer: Michael Johnson, Loyalty Member
 Department: Returns
-Date: 2025-05-09
+Date: 2026-08-29T22:30:29.798748
 Comment: Return process was straightforward. Parking was difficult to find.
+Sentiment: Neutral
+Category: Store Experience
+Insight: Evaluate and improve physical store wayfinding or parking signage to help customers easily locate available parking near the returns department.
 
 Feedback #38
 Customer: James Rodriguez, Returning Customer
 Department: Customer Service
-Date: 2025-04-19
+Date: 2026-08-29T22:30:31.436910
 Comment: Great selection of products available. I appreciated the seasonal decorations.
+Sentiment: Positive
+Category: Inventory/Stock
+Insight: Maintain the current inventory strategy for seasonal decorations and ensure they are prominently displayed early in the season to continue driving customer satisfaction.
 
 Feedback #39
 Customer: John Doe, Regular Customer
 Department: Clothing
-Date: 2025-05-10
+Date: 2026-08-29T22:30:32.872210
 Comment: I had to wait too long for assistance. I had to travel across the store multiple times to find everything.
+Sentiment: Negative
+Category: Store Experience
+Insight: Increase floor staff visibility and availability in the Clothing department, and improve signage or store layout to help customers locate items more easily.
 
 Feedback #40
 Customer: Sarah Miller, Occasional Shopper
 Department: Product Selection
-Date: 2025-04-14
+Date: 2026-08-29T22:30:34.405940
 Comment: I love the new store design! I will definitely shop here again.
+Sentiment: Positive
+Category: Store Experience
+Insight: Acknowledge and maintain the successful store design elements, and consider using this layout as a benchmark for future store remodels to drive repeat customer visits.
 
 Feedback #41
 Customer: Patricia Wilson, Weekend Shopper
 Department: Returns
-Date: 2025-05-03
+Date: 2026-08-29T22:30:35.672456
 Comment: Checkout process took a reasonable amount of time. Self-checkout machines were all working properly.
+Sentiment: Positive
+Category: Store Experience
+Insight: Maintain current preventative maintenance routines for self-checkout machines to ensure continued uptime and efficiency during peak hours.
 
 Feedback #42
 Customer: Lisa Martinez, New Customer
 Department: Checkout
-Date: 2025-04-17
+Date: 2026-08-29T22:30:37.234053
 Comment: Poor quality products for the price. The music playing in the store was too loud.
+Sentiment: Negative
+Category: Product Quality
+Insight: Review the pricing strategy and material quality for products associated with this department to better align with customer expectations, and adjust in-store music volume to improve the overall shopping experience.
 
 Feedback #43
 Customer: Robert Brown, Frequent Buyer
 Department: Clothing
-Date: 2025-04-25
+Date: 2026-08-29T22:30:38.773927
 Comment: Product quality exceeded my expectations. The restrooms were clean and well-maintained.
+Sentiment: Positive
+Category: Store Experience
+Insight: Maintain the current cleaning schedule and quality standards for the restrooms, and ensure staff are recognized for upholding a pleasant in-store environment.
 
 Feedback #44
 Customer: Jane Smith, First-time Shopper
 Department: Electronics
-Date: 2025-05-02
+Date: 2026-08-29T22:30:40.466213
 Comment: Great selection of products available. I appreciated the seasonal decorations.
+Sentiment: Positive
+Category: Inventory/Stock
+Insight: Capitalize on the customer's appreciation of the seasonal decorations by ensuring these thematic displays are prominently featured in marketing campaigns and maintained well-stocked throughout the relevant holiday seasons.
 
 Feedback #45
 Customer: David Garcia, VIP Member
 Department: Store Environment
-Date: 2025-04-23
+Date: 2026-08-29T22:30:42.085686
 Comment: Product I wanted was out of stock. I might reconsider shopping here in the future.
+Sentiment: Negative
+Category: Inventory/Stock
+Insight: Improve inventory tracking and replenishment processes, particularly for high-demand items, and implement a customer notification system for restocked products to prevent lost sales.
 
 Feedback #46
 Customer: Emily Williams, Online Shopper
 Department: Checkout
-Date: 2025-04-27
+Date: 2026-08-29T22:30:43.436487
 Comment: Prices are comparable to other stores. The store was very crowded during my visit.
+Sentiment: Neutral
+Category: Store Experience
+Insight: Implement crowd-control measures or optimize staffing levels at checkout during peak hours to improve the in-store shopping experience.
 
 Feedback #47
 Customer: James Rodriguez, Returning Customer
 Department: Grocery
-Date: 2025-05-07
+Date: 2026-08-29T22:30:45.056314
 Comment: Checkout process was quick and efficient. Self-checkout machines were all working properly.
+Sentiment: Positive
+Category: Store Experience
+Insight: Maintain regular maintenance schedules for all self-checkout machines to ensure continued smooth operations and short wait times.
 
 Feedback #48
 Customer: Sarah Miller, Occasional Shopper
 Department: Online Shopping
-Date: 2025-04-16
+Date: 2026-08-29T22:30:46.593081
 Comment: Website crashed during checkout. I might reconsider shopping here in the future.
+Sentiment: Negative
+Category: Website/App
+Insight: Investigate and resolve checkout page stability issues and server load performance to prevent cart abandonment and customer churn.
 
 Feedback #49
 Customer: John Doe, Regular Customer
 Department: Product Selection
-Date: 2025-05-05
+Date: 2026-08-29T22:30:48.127619
 Comment: Prices were reasonable for the quality offered. I will definitely shop here again.
+Sentiment: Positive
+Category: Price/Value
+Insight: Maintain current pricing strategies and product quality standards to encourage continued customer loyalty and repeat purchases.
 
 Feedback #50
 Customer: Michael Johnson, Loyalty Member
 Department: Clothing
-Date: 2025-04-22
+Date: 2026-08-29T22:30:49.561106
 Comment: Store layout is functional. Parking was difficult to find.
+Sentiment: Neutral
+Category: Store Experience
+Insight: Improve exterior signage and directional parking guides to help customers easily locate and navigate the parking facilities.
 
-
+Feedback #51
+Customer: Thiago
+Department: Online Shopping
+Date: 2026-08-29T23:31:55.728295
+Comment: Website crashed during checkout. I might reconsider shopping here in the future.
+Sentiment: Negative
+Category: Website/App
+Insight: Investigate server load and payment gateway stability during peak traffic hours to prevent checkout crashes and reduce customer churn.
 
