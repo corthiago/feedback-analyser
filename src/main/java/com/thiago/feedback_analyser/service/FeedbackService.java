@@ -26,7 +26,7 @@ public class FeedbackService {
     }
 
     /**
-     * Enhances feedback with AI-generated categories and actionable insights.
+     * Load feedbacks and update cache
      */
     public synchronized List<EnhancedFeedback> getEnhancedFeedback() throws IOException {
         // Return cached data if available
