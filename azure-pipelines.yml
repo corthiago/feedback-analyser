@@ -6,24 +6,74 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
+variables:
+  vmImageName: 'ubuntu-latest'
+  dockerRegistryServiceConnection: 'feedbackanalyser-acr'      # Docker Registry service connection name
+  azureSubscriptionServiceConnection: 'feedback-analyser-arm'  # ARM service connection name
+  containerRegistry: 'feedbackanalyser.azurecr.io'
+  imageRepository: 'feedback-analyser'
+  resourceGroupName: 'az-rg-feedback-analyser'
+  containerAppName: 'feedback-analyser'
+  imageTag: '$(Build.BuildId)'
 
-steps:
+stages:
+- stage: Build
+  displayName: 'Build & Push'
+  jobs:
+  - job: BuildAndPush
+    pool:
+      vmImage: $(vmImageName)
+    steps:
 
-  - script: |
-      java -version
-      javac -version
-      mvn -version
-    displayName: 'Check Java version'
+    - script: |
+        java -version
+        javac -version
+        mvn -version
+      displayName: 'Check Java version'
 
-  - task: Maven@3
-    inputs:
-      mavenPomFile: 'pom.xml'
-      mavenOptions: '-Xmx3072m'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.21'
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: true
-      testResultsFiles: '**/surefire-reports/TEST-*.xml'
-      goals: 'package'
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.21'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        goals: 'package'
+
+    - script: |
+        echo "##vso[task.setvariable variable=shortSha]$(git rev-parse --short HEAD)"
+      displayName: 'Compute short git SHA (secondary tag)'
+
+    - task: Docker@2
+      displayName: 'Build and push image to ACR'
+      inputs:
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageRepository)
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: |
+          $(imageTag)
+          $(shortSha)
+
+- stage: Deploy
+  displayName: 'Deploy to Container Apps'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - job: DeployContainerApp
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Update Container App image'
+      inputs:
+        azureSubscription: $(azureSubscriptionServiceConnection)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az containerapp update \
+            --name $(containerAppName) \
+            --resource-group $(resourceGroupName) \
+            --image $(containerRegistry)/$(imageRepository):$(imageTag)
